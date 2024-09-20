@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   final Firestore _firestore = Firestore();
-  void OpenModal() {
+  void OpenModal({String? docId}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -22,7 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              _firestore.addStudent(_textEditingController.text);
+              if(docId == null){
+                  _firestore.addStudent(_textEditingController.text);
+              }else{
+                _firestore.updateStudent(docId, _textEditingController.text);
+              }
+             
               _textEditingController.clear();
               Navigator.pop(context);
             },
@@ -61,6 +66,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   //display as a ListTile
                   return ListTile(
                     title: Text(StudentText),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () => OpenModal(docId: docId),
+                          icon: Icon(Icons.edit),
+                        ),
+                         IconButton(
+                      onPressed: () => _firestore.deleteStudent(docId),
+                      icon: Icon(Icons.delete),
+                    ),
+                      ],
+                    ),
+                   
                   );
                 });
           } else {

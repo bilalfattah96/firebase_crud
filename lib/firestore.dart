@@ -15,6 +15,16 @@ class Firestore {
     return studentData;
   }
   //update
-
+  Future<void> updateStudent(String docId,String NewStdName){
+    return students.doc(docId).update(
+      {
+        'studentName': NewStdName,
+        'time': Timestamp.now()
+      }
+    );
+  }
   //delete
+  Future<void> deleteStudent(String docId){
+    return students.doc(docId).delete();
+  }
 }
